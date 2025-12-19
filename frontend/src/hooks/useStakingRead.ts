@@ -1,16 +1,42 @@
-import { useEffect, useState } from "react";
-import { useWallet } from "../world/wallet";
-import { readUserInfo } from "../services/staking.service";
+import { useEffect, useState } from "react"
+import { publicClient } from "../world/wallet"
+import stakingAbi from "../abi/MatrixStaking.json"
+import { CONTRACTS } from "../config/contracts"
+import { REFRESH_INTERVAL } from "../config/constants"
 
-export const useStakingRead = () => {
-  const { provider, address } = useWallet();
-  const [info, setInfo] = useState<any>();
+export function useStakingRead(address?: `0x${string}`) {
+  const [data, setData] = useState<any>({})
 
   useEffect(() => {
-    if (!provider || !address) return;
+    if (!address) return
 
-    readUserInfo(provider, address).then(setInfo);
-  }, [provider, address]);
+    const load = async () => {
+      const [user, info, apr] = await Promise.all([
+        publicClient.readContract({
+          address: CONTRACTS.STAKING,
+          abi: stakingAbi,
+          functionName: "getUserInfo",
+          args: [address],
+        }),
+        publicClient.readContract({
+          address: CONTRACTS.STAKING,
+          abi: stakingAbi,
+          functionName: "getContractInfo",
+        }),
+        publicClient.readContract({
+          address: CONTRACTS.STAKING,
+          abi: stakingAbi,
+          functionName: "apr",
+        }),
+      ])
 
-  return info;
-};
+      setData({ user, info, apr })
+    }
+
+    load()
+    const i = setInterval(load, REFRESH_INTERVAL)
+    return () => clearInterval(i)
+  }, [address])
+
+  return data
+}
