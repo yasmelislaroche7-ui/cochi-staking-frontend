@@ -1,1 +1,125 @@
-
+[
+  {
+    "inputs": [
+      { "internalType": "address", "name": "_token", "type": "address" },
+      { "internalType": "uint256", "name": "_apr", "type": "uint256" }
+    ],
+    "stateMutability": "nonpayable",
+    "type": "constructor"
+  },
+  { "inputs": [], "name": "ReentrancyGuardReentrantCall", "type": "error" },
+  {
+    "inputs": [{ "internalType": "address", "name": "token", "type": "address" }],
+    "name": "SafeERC20FailedOperation",
+    "type": "error"
+  },
+  {
+    "anonymous": false,
+    "inputs": [{ "indexed": false, "internalType": "uint256", "name": "newApr", "type": "uint256" }],
+    "name": "APRUpdated",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      { "indexed": false, "internalType": "address", "name": "token", "type": "address" },
+      { "indexed": false, "internalType": "uint256", "name": "amount", "type": "uint256" }
+    ],
+    "name": "ERC20Recovered",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      { "indexed": true, "internalType": "address", "name": "owner", "type": "address" },
+      { "indexed": false, "internalType": "uint256", "name": "amount", "type": "uint256" }
+    ],
+    "name": "EmergencyWithdraw",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      { "indexed": true, "internalType": "address", "name": "user", "type": "address" },
+      { "indexed": false, "internalType": "uint256", "name": "reward", "type": "uint256" }
+    ],
+    "name": "RewardsClaimed",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [{ "indexed": false, "internalType": "uint256", "name": "amount", "type": "uint256" }],
+    "name": "RewardsFunded",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      { "indexed": true, "internalType": "address", "name": "user", "type": "address" },
+      { "indexed": false, "internalType": "uint256", "name": "amount", "type": "uint256" }
+    ],
+    "name": "Staked",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      { "indexed": true, "internalType": "address", "name": "user", "type": "address" },
+      { "indexed": false, "internalType": "uint256", "name": "amount", "type": "uint256" }
+    ],
+    "name": "Unstaked",
+    "type": "event"
+  },
+  { "inputs": [], "name": "MAX_APR", "outputs": [{ "type": "uint256" }], "stateMutability": "view", "type": "function" },
+  { "inputs": [], "name": "UNSTAKE_DELAY", "outputs": [{ "type": "uint256" }], "stateMutability": "view", "type": "function" },
+  { "inputs": [], "name": "YEAR", "outputs": [{ "type": "uint256" }], "stateMutability": "view", "type": "function" },
+  { "inputs": [], "name": "apr", "outputs": [{ "type": "uint256" }], "stateMutability": "view", "type": "function" },
+  { "inputs": [], "name": "claim", "stateMutability": "nonpayable", "type": "function" },
+  { "inputs": [{ "name": "amount", "type": "uint256" }], "name": "emergencyWithdraw", "stateMutability": "nonpayable", "type": "function" },
+  { "inputs": [{ "name": "amount", "type": "uint256" }], "name": "fundRewards", "stateMutability": "nonpayable", "type": "function" },
+  {
+    "inputs": [],
+    "name": "getContractInfo",
+    "outputs": [
+      { "name": "balance", "type": "uint256" },
+      { "name": "staked", "type": "uint256" },
+      { "name": "availableRewards", "type": "uint256" }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [{ "name": "user", "type": "address" }],
+    "name": "getUserInfo",
+    "outputs": [
+      { "name": "staked", "type": "uint256" },
+      { "name": "pending", "type": "uint256" },
+      { "name": "unlockTime", "type": "uint256" },
+      { "name": "lastUpdate", "type": "uint256" }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  { "inputs": [], "name": "owner", "outputs": [{ "type": "address" }], "stateMutability": "view", "type": "function" },
+  { "inputs": [{ "name": "user", "type": "address" }], "name": "pendingRewards", "outputs": [{ "type": "uint256" }], "stateMutability": "view", "type": "function" },
+  { "inputs": [{ "name": "otherToken", "type": "address" }, { "name": "amount", "type": "uint256" }], "name": "recoverERC20", "stateMutability": "nonpayable", "type": "function" },
+  { "inputs": [{ "name": "newApr", "type": "uint256" }], "name": "setAPR", "stateMutability": "nonpayable", "type": "function" },
+  { "inputs": [{ "name": "amount", "type": "uint256" }], "name": "stake", "stateMutability": "nonpayable", "type": "function" },
+  {
+    "inputs": [{ "type": "address" }],
+    "name": "stakes",
+    "outputs": [
+      { "name": "amount", "type": "uint256" },
+      { "name": "rewardDebt", "type": "uint256" },
+      { "name": "lastUpdate", "type": "uint256" },
+      { "name": "unlockTime", "type": "uint256" }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  { "inputs": [], "name": "token", "outputs": [{ "type": "address" }], "stateMutability": "view", "type": "function" },
+  { "inputs": [], "name": "totalRewardsPaid", "outputs": [{ "type": "uint256" }], "stateMutability": "view", "type": "function" },
+  { "inputs": [], "name": "totalStaked", "outputs": [{ "type": "uint256" }], "stateMutability": "view", "type": "function" },
+  { "inputs": [{ "name": "amount", "type": "uint256" }], "name": "unstake", "stateMutability": "nonpayable", "type": "function" },
+  { "inputs": [], "name": "updateMyRewards", "stateMutability": "nonpayable", "type": "function" }
+    ]
