@@ -1,15 +1,28 @@
-import { useWallet } from "../world/wallet";
-import * as staking from "../services/staking.service";
-import * as token from "../services/token.service";
+import stakingAbi from "../abi/MatrixStaking.json"
+import tokenAbi from "../abi/ERC20.json"
+import { CONTRACTS } from "../config/contracts"
+import { walletClient } from "../world/wallet"
 
-export const useStakingWrite = () => {
-  const { signer } = useWallet();
-  if (!signer) throw new Error("No signer");
+export function useStakingWrite(address?: `0x${string}`) {
+  const write = async (fn: string, args: any[] = []) => {
+    if (!address) return
+    return walletClient.writeContract({
+      address: CONTRACTS.STAKING,
+      abi: stakingAbi,
+      functionName: fn,
+      args,
+      account: address,
+    })
+  }
 
-  return {
-    approve: (amount: bigint) => token.approveToken(signer, amount),
-    stake: (amount: bigint) => staking.stake(signer, amount),
-    unstake: (amount: bigint) => staking.unstake(signer, amount),
-    claim: () => staking.claim(signer),
-  };
-};
+  const approve = async (amount: bigint) =>
+    walletClient.writeContract({
+      address: CONTRACTS.TOKEN,
+      abi: tokenAbi,
+      functionName: "approve",
+      args: [CONTRACTS.STAKING, amount],
+      account: address!,
+    })
+
+  return { write, approve }
+}
