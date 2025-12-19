@@ -1,16 +1,18 @@
-import { useWallet } from "../hooks/useWallet"
+import { useWallet } from "../hooks/useWallet";
 
-export default function WalletStatus() {
-  const { address, chainId, isConnected } = useWallet()
+export function WalletStatus() {
+  const { account, loading, connected } = useWallet();
 
-  if (!isConnected) {
-    return <div>Wallet not connected</div>
-  }
+  if (loading) return <p>Cargando wallet...</p>;
+  if (!connected) return <p>Wallet no conectada</p>;
 
   return (
-    <div style={{ fontSize: 12 }}>
-      <div>Wallet: {address}</div>
-      <div>Chain: {chainId === 480 ? "Worldchain Mainnet" : "Wrong network"}</div>
-    </div>
-  )
+    <p>
+      Wallet conectada:{" "}
+      <strong>
+        {account?.address.slice(0, 6)}...
+        {account?.address.slice(-4)}
+      </strong>
+    </p>
+  );
 }
