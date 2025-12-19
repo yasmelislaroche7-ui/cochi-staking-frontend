@@ -1,17 +1,6 @@
-import Dashboard from "./pages/Dashboard";
+import Dashboard from "./pages/Dashboard"
+import "./matrix.css"
 
-// Providers
-import { WorldWalletProvider } from "./provider/WorldWalletProvider";
-import { WorldIdProvider } from "./provider/WorldIdProvider";
-
-function App() {
-  return (
-    <WorldWalletProvider>
-      <WorldIdProvider>
-        <Dashboard />
-      </WorldIdProvider>
-    </WorldWalletProvider>
-  );
+export default function App() {
+  return <Dashboard />
 }
-
-export default App;
