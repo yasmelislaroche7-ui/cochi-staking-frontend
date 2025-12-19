@@ -1,12 +1,23 @@
-import { useEffect, useState } from "react"
-import { walletClient } from "../world/wallet"
+import { useEffect, useState } from "react";
+import { getWalletAccount, WalletAccount } from "../world/wallet";
 
 export function useWallet() {
-  const [address, setAddress] = useState<`0x${string}` | null>(null)
+  const [account, setAccount] = useState<WalletAccount | null>(null);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    walletClient.getAddresses().then(a => setAddress(a[0] ?? null))
-  }, [])
+    async function load() {
+      const acc = await getWalletAccount();
+      setAccount(acc);
+      setLoading(false);
+    }
 
-  return { address }
+    load();
+  }, []);
+
+  return {
+    account,
+    loading,
+    connected: !!account,
+  };
 }
