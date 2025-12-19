@@ -1,40 +1,18 @@
-import { createContext, useContext, useState } from "react";
-import { IDKitWidget, VerificationLevel } from "@worldcoin/idkit";
-import { WORLD_ID } from "../config/world";
+import { IDKitWidget } from "@worldcoin/idkit"
 
-type WorldIdCtx = {
-  verified: boolean;
-};
-
-const WorldIdContext = createContext<WorldIdCtx>({ verified: false });
-
-export const WorldIdProvider = ({ children }: { children: React.ReactNode }) => {
-  const [verified, setVerified] = useState(
-    localStorage.getItem("worldid_verified") === "true"
-  );
-
+export function WorldIdGate({ onSuccess }: { onSuccess: () => void }) {
   return (
-    <WorldIdContext.Provider value={{ verified }}>
-      {!verified && (
-        <IDKitWidget
-          app_id={WORLD_ID.appId}
-          action={WORLD_ID.actionId}
-          verification_level={VerificationLevel.Orb}
-          onSuccess={() => {
-            localStorage.setItem("worldid_verified", "true");
-            setVerified(true);
-          }}
-        >
-          {({ open }) => (
-            <button onClick={open} style={{ padding: 12 }}>
-              Verify with World ID
-            </button>
-          )}
-        </IDKitWidget>
+    <IDKitWidget
+      app_id="app_f84357b08826b22ace9ea93d03aef932"
+      action="stake"
+      onSuccess={onSuccess}
+      verification_level="orb"
+    >
+      {({ open }) => (
+        <button onClick={open} className="btn">
+          Verify with World ID
+        </button>
       )}
-      {children}
-    </WorldIdContext.Provider>
-  );
-};
-
-export const useWorldId = () => useContext(WorldIdContext);
+    </IDKitWidget>
+  )
+}
