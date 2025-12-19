@@ -1,12 +1,15 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
-import App from "./app";
-import { WorldProvider } from "./provider/WorldProvider";
+import App from "./App";
 
-ReactDOM.createRoot(document.getElementById("root")!).render(
+import { AppProvider } from "./provider/AppProvider";
+
+ReactDOM.createRoot(
+  document.getElementById("root") as HTMLElement
+).render(
   <React.StrictMode>
-    <WorldProvider>
+    <AppProvider>
       <App />
-    </WorldProvider>
+    </AppProvider>
   </React.StrictMode>
 );
