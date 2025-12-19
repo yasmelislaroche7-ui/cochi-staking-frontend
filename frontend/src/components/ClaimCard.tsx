@@ -1,26 +1,12 @@
-import { useStakingWrite } from "../hooks/useStakingWrite"
-import { useStakingRead } from "../hooks/useStakingRead"
-import { formatUnits } from "viem"
-import WorldIdGate from "./WorldIdGate"
+type Props = {
+  onClaim?: () => void;
+};
 
-export default function ClaimCard() {
-  const { claim } = useStakingWrite()
-  const { pendingRewards } = useStakingRead()
-
-  const hasRewards = pendingRewards > 0n
-
+export function ClaimCard({ onClaim }: Props) {
   return (
-    <WorldIdGate>
-      <div>
-        <h3>Claim Rewards</h3>
-        <div>
-          Pending: {formatUnits(pendingRewards, 18)} MTXs
-        </div>
-
-        <button disabled={!hasRewards} onClick={claim}>
-          Claim
-        </button>
-      </div>
-    </WorldIdGate>
-  )
+    <div>
+      <h3>Claim Rewards</h3>
+      <button onClick={onClaim}>Claim</button>
+    </div>
+  );
 }
