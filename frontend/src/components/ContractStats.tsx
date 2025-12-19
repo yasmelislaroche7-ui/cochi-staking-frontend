@@ -1,16 +1,11 @@
-import { useStakingRead } from "../hooks/useStakingRead"
-import { formatUnits } from "viem"
+type Props = {
+  totalStaked?: string;
+};
 
-export default function ContractStats() {
-  const { contractInfo, apr } = useStakingRead()
-
-  if (!contractInfo) return null
-
+export function ContractStats({ totalStaked = "0" }: Props) {
   return (
     <div>
-      <div>Total Staked: {formatUnits(contractInfo.staked, 18)} MTXs</div>
-      <div>Available Rewards: {formatUnits(contractInfo.availableRewards, 18)} MTXs</div>
-      <div>APR: {apr / 100}%</div>
+      <p>Total staked: {totalStaked}</p>
     </div>
-  )
+  );
 }
