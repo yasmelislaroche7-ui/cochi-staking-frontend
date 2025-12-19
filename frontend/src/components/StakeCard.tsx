@@ -1,32 +1,12 @@
-import { useState } from "react"
-import { useStakingWrite } from "../hooks/useStakingWrite"
-import { useStakingRead } from "../hooks/useStakingRead"
-import WorldIdGate from "./WorldIdGate"
+type Props = {
+  onStake?: () => void;
+};
 
-export default function StakeCard() {
-  const [amount, setAmount] = useState("")
-  const { stake } = useStakingWrite()
-  const { hasRewards } = useStakingRead()
-
+export function StakeCard({ onStake }: Props) {
   return (
-    <WorldIdGate>
-      <div>
-        <h3>Stake MTXs</h3>
-
-        <input
-          type="number"
-          placeholder="Amount"
-          value={amount}
-          onChange={(e) => setAmount(e.target.value)}
-        />
-
-        <button
-          disabled={!hasRewards || !amount}
-          onClick={() => stake(amount)}
-        >
-          Stake
-        </button>
-      </div>
-    </WorldIdGate>
-  )
+    <div>
+      <h3>Stake</h3>
+      <button onClick={onStake}>Stake</button>
+    </div>
+  );
 }
