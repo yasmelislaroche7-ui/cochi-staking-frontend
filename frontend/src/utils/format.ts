@@ -1,7 +1,12 @@
-import { formatUnits } from "viem"
+export function formatNumber(value?: number | bigint): string {
+  if (value === undefined || value === null) return "0";
 
-export const formatToken = (value?: bigint) =>
-  value ? Number(formatUnits(value, 18)).toFixed(4) : "0.0000"
+  const num =
+    typeof value === "bigint"
+      ? Number(value)
+      : value;
 
-export const formatDate = (ts: number) =>
-  ts === 0 ? "-" : new Date(ts * 1000).toLocaleString()
+  return new Intl.NumberFormat("en-US", {
+    maximumFractionDigits: 4,
+  }).format(num);
+}
