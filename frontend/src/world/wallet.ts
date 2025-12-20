@@ -1,16 +1,12 @@
-export type WalletAccount = {
-  address: `0x${string}`;
-};
+import { createPublicClient, createWalletClient, http } from "viem";
+import { worldchain } from "../config/world";
 
-export async function getWalletAccount(): Promise<WalletAccount | null> {
-  if (typeof window === "undefined") return null;
-  if (!window.ethereum) return null;
+export const publicClient = createPublicClient({
+  chain: worldchain,
+  transport: http(worldchain.rpcUrl),
+});
 
-  const accounts = await window.ethereum.request({
-    method: "eth_requestAccounts",
-  });
-
-  if (!accounts || accounts.length === 0) return null;
-
-  return { address: accounts[0] };
-}
+export const walletClient = createWalletClient({
+  chain: worldchain,
+  transport: http(worldchain.rpcUrl),
+});
