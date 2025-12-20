@@ -1,28 +1,43 @@
-import stakingAbi from "../abi/MatrixStaking.json"
-import tokenAbi from "../abi/ERC20.json"
-import { CONTRACTS } from "../config/contracts"
-import { walletClient } from "../world/wallet"
+import { walletClient } from "../world/wallet";
+import { STAKING_ADDRESS } from "../config/contracts";
+import { stakingAbi } from "../abi/MatrixStaking";
 
-export function useStakingWrite(address?: `0x${string}`) {
-  const write = async (fn: string, args: any[] = []) => {
-    if (!address) return
-    return walletClient.writeContract({
-      address: CONTRACTS.STAKING,
-      abi: stakingAbi,
-      functionName: fn,
-      args,
-      account: address,
-    })
+export function useStakingWrite(account?: `0x${string}`) {
+  if (!account) {
+    return {
+      stake: async () => {},
+      unstake: async () => {},
+      claim: async () => {},
+    };
   }
 
-  const approve = async (amount: bigint) =>
-    walletClient.writeContract({
-      address: CONTRACTS.TOKEN,
-      abi: tokenAbi,
-      functionName: "approve",
-      args: [CONTRACTS.STAKING, amount],
-      account: address!,
-    })
+  const stake = async (amount: bigint) => {
+    await walletClient.writeContract({
+      address: STAKING_ADDRESS,
+      abi: stakingAbi,
+      functionName: "stake",
+      args: [amount],
+      account,
+    });
+  };
 
-  return { write, approve }
+  const unstake = async () => {
+    await walletClient.writeContract({
+      address: STAKING_ADDRESS,
+      abi: stakingAbi,
+      functionName: "unstake",
+      account,
+    });
+  };
+
+  const claim = async () => {
+    await walletClient.writeContract({
+      address: STAKING_ADDRESS,
+      abi: stakingAbi,
+      functionName: "claim",
+      account,
+    });
+  };
+
+  return { stake, unstake, claim };
 }
