@@ -1,42 +1,40 @@
-import { useEffect, useState } from "react"
-import { publicClient } from "../world/wallet"
-import stakingAbi from "../abi/MatrixStaking.json"
-import { CONTRACTS } from "../config/contracts"
-import { REFRESH_INTERVAL } from "../config/constants"
+import { useEffect, useState } from "react";
+import { publicClient } from "../world/wallet";
+import { STAKING_ADDRESS } from "../config/contracts";
+import { stakingAbi } from "../abi/MatrixStaking";
+import { REFRESH_INTERVAL } from "../config/constants";
 
 export function useStakingRead(address?: `0x${string}`) {
-  const [data, setData] = useState<any>({})
+  const [pendingRewards, setPendingRewards] = useState<bigint>(0n);
+  const [stakedAmount, setStakedAmount] = useState<bigint>(0n);
 
   useEffect(() => {
-    if (!address) return
+    if (!address) return;
 
-    const load = async () => {
-      const [user, info, apr] = await Promise.all([
+    const fetch = async () => {
+      const [info, rewards] = await Promise.all([
         publicClient.readContract({
-          address: CONTRACTS.STAKING,
+          address: STAKING_ADDRESS,
           abi: stakingAbi,
-          functionName: "getUserInfo",
+          functionName: "userInfo",
           args: [address],
         }),
         publicClient.readContract({
-          address: CONTRACTS.STAKING,
+          address: STAKING_ADDRESS,
           abi: stakingAbi,
-          functionName: "getContractInfo",
+          functionName: "pendingRewards",
+          args: [address],
         }),
-        publicClient.readContract({
-          address: CONTRACTS.STAKING,
-          abi: stakingAbi,
-          functionName: "apr",
-        }),
-      ])
+      ]);
 
-      setData({ user, info, apr })
-    }
+      setStakedAmount(info[0]);
+      setPendingRewards(rewards);
+    };
 
-    load()
-    const i = setInterval(load, REFRESH_INTERVAL)
-    return () => clearInterval(i)
-  }, [address])
+    fetch();
+    const i = setInterval(fetch, REFRESH_INTERVAL);
+    return () => clearInterval(i);
+  }, [address]);
 
-  return data
+  return { stakedAmount, pendingRewards };
 }
